@@ -1,4 +1,4 @@
-# EcoSort Waste Classification
+﻿# EcoSort Waste Classification
 
 EcoSort Waste Classification is an ensemble-based computer vision project that
 identifies 21 fine-grained waste subclasses and maps them to five household bin
@@ -171,3 +171,15 @@ make EcoSort Waste Classification possible.
 EcoSort expresses gratitude to the open-source community and researchers whose
 work underpins this project. If you contribute improvements or new assets,
 please add your details here when submitting pull requests.
+
+## 🧩 Docker Deployment
+- Docker image: `ghcr.io/alongkotmeaw/ecosort_wasteclassification:latest`
+- Base image: `pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime`
+- Purpose: run the Flask web app and the PyTorch ensemble classifier for 21 waste subclasses
+- Entry module: `Code/webpage/web/main/main.py`
+
+### Quick Start
+```bash
+docker pull ghcr.io/alongkotmeaw/ecosort_wasteclassification:latest
+docker run -p 5000:5000 ghcr.io/alongkotmeaw/ecosort_wasteclassification
+```
