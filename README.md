@@ -15,7 +15,7 @@ application that exposes real-time image upload and camera capture support.
 
 ## Repository Layout
 ```
-Code/
+src/
   RestNet50/
     train/            # 5-fold ResNet50 training utilities
     output/           # Logs, checkpoints, confusion matrices
@@ -50,12 +50,12 @@ pip install -r requirements.txt
 
 ## Running the Flask Web App
 1. Collect the five ResNet50 checkpoints (`best_model_fold1.pth` ... `best_model_fold5.pth`)
-   and place them in `Code/webpage/web/model/`. Update the `MODEL_PATHS` constant in
-   `Code/webpage/web/main/main.py` if you store them elsewhere.
-2. (Optional) review the threshold configuration in `Code/webpage/web/main/class_thresholds.json`.
+   and place them in `src/webpage/web/model/`. Update the `MODEL_PATHS` constant in
+   `src/webpage/web/main/main.py` if you store them elsewhere.
+2. (Optional) review the threshold configuration in `src/webpage/web/main/class_thresholds.json`.
 3. Start the app from the project root:
    ```bash
-   python Code/webpage/web/main/main.py
+   python src/webpage/web/main/main.py
    ```
 4. Open `http://127.0.0.1:5000/` in a browser. The console also prints a LAN URL.
 5. To expose the interface externally, launch ngrok in a second terminal:
@@ -66,11 +66,11 @@ pip install -r requirements.txt
 ## Training Pipelines
 
 ### ResNet50 Ensemble
-1. Point `DATA_DIR` in `Code/RestNet50/train/train_kfold_resnet50.py` to the
+1. Point `DATA_DIR` in `src/RestNet50/train/train_kfold_resnet50.py` to the
    directory that holds one folder per class (no need to pre-split the data).
 2. Activate your environment and run:
    ```bash
-   python Code/RestNet50/train/train_kfold_resnet50.py
+   python src/RestNet50/train/train_kfold_resnet50.py
    ```
 3. Outputs include:
    - `best_model_fold{n}.pth` checkpoints
@@ -79,31 +79,31 @@ pip install -r requirements.txt
 
 ### EfficientNet-B1 Weighted Ensemble
 1. Update the `DATA_DIR` constant in
-   `Code/EfficientB0/train/train_kfold_log_b3_mixup_weighted.py` to the same
+   `src/EfficientB0/train/train_kfold_log_b3_mixup_weighted.py` to the same
    single dataset directory.
 2. Run the training script:
    ```bash
-   python Code/EfficientB0/train/train_kfold_log_b3_mixup_weighted.py
+   python src/EfficientB0/train/train_kfold_log_b3_mixup_weighted.py
    ```
 3. Per-fold checkpoints, logs, and confusion matrices are written to
-   `Code/EfficientB0/output/`.
+   `src/EfficientB0/output/`.
 
 ### Ensemble Evaluation
-Use `Code/EfficientB0/train/test_ensemble_efficientnet.py` to evaluate the
+Use `src/EfficientB0/train/test_ensemble_efficientnet.py` to evaluate the
 EfficientNet ensemble on the hold-out `test/` split and generate reports:
 ```bash
-python Code/EfficientB0/train/test_ensemble_efficientnet.py
+python src/EfficientB0/train/test_ensemble_efficientnet.py
 ```
 
 ## Threshold Tuning & UI Behaviour
-- `Code/webpage/web/main/class_thresholds.json` holds class-level probability
+- `src/webpage/web/main/class_thresholds.json` holds class-level probability
   thresholds. When a prediction exceeds its threshold it is considered confident
   enough to display; otherwise the system falls back to the highest probability.
-- `Code/webpage/web/main/tuned_thresholds.py` is an alternative Flask entry point
+- `src/webpage/web/main/tuned_thresholds.py` is an alternative Flask entry point
   with Thai localisation for waste group labels and detailed probability tables.
 - Waste subclasses are mapped to bin categories through the `GROUPS` structure
-  inside `Code/webpage/web/main/main.py`, which in turn surfaces tips drawn from
-  `Code/webpage/web/main/info_txt/`.
+  inside `src/webpage/web/main/main.py`, which in turn surfaces tips drawn from
+  `src/webpage/web/main/info_txt/`.
 
 ## Dataset Expectations
 ```
@@ -176,7 +176,7 @@ please add your details here when submitting pull requests.
 - Docker image: `ghcr.io/alongkotmeaw/ecosort_wasteclassification:latest`
 - Base image: `pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime`
 - Purpose: run the Flask web app and the PyTorch ensemble classifier for 21 waste subclasses
-- Entry module: `Code/webpage/web/main/main.py`
+- Entry module: `src/webpage/web/main/main.py`
 
 ### Quick Start
 ```bash
