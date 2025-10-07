@@ -45,12 +45,21 @@ val_tf = transforms.Compose([
 ])
 
 # ===== DATASET =====
-train_ds = ImageFolder(os.path.join(DATA_DIR, "train"), transform=train_tf)
-val_ds = ImageFolder(os.path.join(DATA_DIR, "val"), transform=val_tf)
-full_dataset = train_ds
-full_dataset.samples += val_ds.samples
-full_dataset.targets += val_ds.targets
-full_dataset.transform = train_tf
+class SubsetWithTransform(Subset):
+    """Subset helper that applies a dedicated transform per split."""
+
+    def __init__(self, dataset, indices, transform):
+        super().__init__(dataset, indices)
+        self.transform = transform
+
+    def __getitem__(self, idx):
+        image, target = self.dataset[self.indices[idx]]
+        if self.transform:
+            image = self.transform(image)
+        return image, target
+
+
+full_dataset = ImageFolder(DATA_DIR, transform=None)
 
 labels = full_dataset.targets
 classes = full_dataset.classes
@@ -68,9 +77,8 @@ skf = StratifiedKFold(n_splits=NUM_FOLDS, shuffle=True, random_state=42)
 for fold, (train_idx, val_idx) in enumerate(skf.split(np.zeros(len(labels)), labels), 1):
     print(f"\n Fold {fold}/{NUM_FOLDS}")
 
-    train_set = Subset(full_dataset, train_idx)
-    val_set = Subset(full_dataset, val_idx)
-    val_set.dataset.transform = val_tf
+    train_set = SubsetWithTransform(full_dataset, train_idx, train_tf)
+    val_set = SubsetWithTransform(full_dataset, val_idx, val_tf)
 
     train_loader = DataLoader(train_set, batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(val_set, batch_size=BATCH_SIZE)

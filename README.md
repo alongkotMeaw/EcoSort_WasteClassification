@@ -66,9 +66,8 @@ pip install -r requirements.txt
 ## Training Pipelines
 
 ### ResNet50 Ensemble
-1. Organise the dataset at the path referenced by `DATA_DIR` inside
-   `Code/RestNet50/train/train_kfold_resnet50.py`. The script expects
-   `train/`, `val/`, and `test/` subfolders containing class directories.
+1. Point `DATA_DIR` in `Code/RestNet50/train/train_kfold_resnet50.py` to the
+   directory that holds one folder per class (no need to pre-split the data).
 2. Activate your environment and run:
    ```bash
    python Code/RestNet50/train/train_kfold_resnet50.py
@@ -80,7 +79,8 @@ pip install -r requirements.txt
 
 ### EfficientNet-B1 Weighted Ensemble
 1. Update the `DATA_DIR` constant in
-   `Code/EfficientB0/train/train_kfold_log_b3_mixup_weighted.py`.
+   `Code/EfficientB0/train/train_kfold_log_b3_mixup_weighted.py` to the same
+   single dataset directory.
 2. Run the training script:
    ```bash
    python Code/EfficientB0/train/train_kfold_log_b3_mixup_weighted.py
@@ -108,22 +108,18 @@ python Code/EfficientB0/train/test_ensemble_efficientnet.py
 ## Dataset Expectations
 ```
 dataset_root/
-  train/
-    AluminumCan/
-    Battery/
+  AluminumCan/
+    img001.jpg
     ...
-  val/
-    AluminumCan/
-    Battery/
+  Battery/
     ...
-  test/
-    AluminumCan/
-    Battery/
-    ...
+  ...
 ```
-All folders should contain RGB images. ResNet50 scripts resize to 224x224, while
-EfficientNet scripts resize to 260x260. Augmentations include random horizontal
-flip, colour jitter, and ImageNet normalisation.
+All folders should contain RGB images. ResNet50 scripts resize inputs to
+224x224, while EfficientNet scripts resize to 260x260. Augmentations include
+random horizontal flip, colour jitter, and ImageNet normalisation. Optionally,
+you can keep aside a held-out test split to run `test_ensemble_efficientnet.py`
+or other evaluations after cross-validation.
 
 ## Project Credits
 - Development & Maintenance: EcoSort Waste Classification project team (repository owner: Alongkot)
