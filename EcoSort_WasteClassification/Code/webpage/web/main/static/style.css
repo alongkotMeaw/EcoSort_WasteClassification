@@ -1,0 +1,247 @@
+:root {
+  --bg: #0c1116;
+  --panel: #121821;
+  --panel-2: #0f1520;
+  --text: #eaeef2;
+  --muted: #9aa5b1;
+  --accent: #00c853;
+  --accent-2: #00e676;
+  --line: rgba(255,255,255,0.06);
+  --shadow: 0 10px 30px rgba(0,0,0,0.35);
+  --radius: 14px;
+}
+
+/* ===== Desktop Default (คงขนาดเดิมสวย ๆ) ===== */
+body {
+  font-family: Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 30px;
+  font-size: 16px;
+}
+
+.container {
+  width: 100%;
+  max-width: 950px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #f3f7fb;
+  font-size: 1.8rem;
+}
+
+.upload-box {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 18px;
+  border-radius: var(--radius);
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow);
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.file-input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #0b1017;
+  color: var(--text);
+  width: 70%;
+  font-size: 15px;
+}
+
+.btn {
+  padding: 10px 16px;
+  background: var(--accent);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.btn:hover {
+  background: var(--accent-2);
+}
+
+.alert {
+  margin: 14px 0;
+  padding: 10px;
+  background: #2c1e1e;
+  color: #ffb4b4;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== Preview Section ===== */
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.preview-img, #camera-stream {
+  margin-top: 12px;
+  width: 100%;
+  max-width: 340px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: block;
+}
+
+.camera-btns {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+/* ===== Prediction Card ===== */
+.bin-card {
+  text-align: center;
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bin-card img {
+  max-width: 220px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* ===== Info Cards ===== */
+.info-section {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.info-card {
+  border-radius: 14px;
+  padding: 18px 22px;
+  box-shadow: var(--shadow);
+  line-height: 1.6;
+}
+
+.info-card.green {
+  background: #1b402b;
+  border-left: 5px solid #00e676;
+}
+
+.info-card.darker {
+  background: #113422;
+  border-left: 5px solid #00c853;
+}
+
+.info-card.dark {
+  background: #0d261a;
+  border-left: 5px solid #3cc36c;
+}
+
+.info-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.info-card ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.info-card li {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #e0f2e9;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===== Icon ===== */
+.icon-chart::before { content: "📊"; }
+.icon-check::before { content: "✅"; }
+.icon-link::before { content: "🔗"; }
+
+/* ===== Responsive for Mobile ===== */
+@media (max-width: 900px) {
+  body {
+    padding: 10px;
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  .upload-box {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .file-input {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .btn {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .preview-img, #camera-stream {
+    max-width: 100%;
+  }
+
+  .bin-card, .info-section {
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .info-card {
+    padding: 14px 16px;
+  }
+
+  .info-card h3 {
+    font-size: 15px;
+  }
+
+  .info-card li {
+    font-size: 13.5px;
+  }
+}

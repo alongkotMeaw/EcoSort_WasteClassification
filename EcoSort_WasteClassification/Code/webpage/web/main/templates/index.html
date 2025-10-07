@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Waste Classifier</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+  <h1>Waste Classification System</h1>
+
+  <form id="uploadForm" method="POST" enctype="multipart/form-data" class="upload-box">
+    <input type="file" name="file" id="fileInput" class="file-input" accept="image/*" onchange="previewFile(this)">
+    <button type="submit" class="btn">Upload & Predict</button>
+  </form>
+
+  <div class="preview-container">
+    <img id="preview" class="preview-img" style="display:none;" alt="Preview Image">
+    <video id="camera-stream" autoplay playsinline style="display:none;"></video>
+    <canvas id="snapshot" style="display:none;"></canvas>
+    <div class="camera-btns">
+      <button class="btn btn-small" type="button" onclick="startCamera()">📷 Open Camera</button>
+      <button class="btn btn-small" type="button" onclick="capturePhoto()">📸 Capture</button>
+      <button class="btn btn-small" type="button" onclick="stopCamera()">❌ Close Camera</button>
+    </div>
+  </div>
+
+  {% if prediction %}
+  <div class="bin-card">
+    <h2>{{ bin_group_label }}</h2>
+    {% if bin_image %}
+    <img src="{{ url_for('static', filename=bin_image) }}" alt="{{ bin_group_label }}">
+    {% endif %}
+  </div>
+
+  {% if info_text %}
+  {% set lines = info_text.splitlines() %}
+  <div class="info-section">
+
+    <div class="info-card green">
+      <h3><i class="icon-chart"></i> Interesting Information</h3>
+      <ul>
+        {% for line in lines %}
+          {% if line.startswith('✅') %}
+            </ul></div><div class="info-card darker"><h3><i class="icon-check"></i> Correct Disposal</h3><ul>
+          {% elif line.startswith('🔗') %}
+            </ul></div><div class="info-card dark"><h3><i class="icon-link"></i> References</h3><ul>
+          {% elif line.strip().startswith('•') %}
+            <li><span class="auto-icon">{{ line[1:] }}</span></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+  {% endif %}
+  {% endif %}
+</div>
+
+<script>
+const preview = document.getElementById('preview');
+const fileInput = document.getElementById('fileInput');
+const video = document.getElementById('camera-stream');
+const canvas = document.getElementById('snapshot');
+let stream;
+
+function previewFile(input) {
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+
+async function startCamera() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { exact: "environment" } }
+    });
+    video.srcObject = stream;
+    video.style.display = "block";
+    preview.style.display = "none";
+  } catch (err) {
+    console.warn("Cannot access back camera, trying default camera:", err);
+    // fallback ไปกล้องหน้า
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      video.style.display = "block";
+    } catch (err2) {
+      alert("Cannot access any camera: " + err2);
+    }
+  }
+}
+
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    video.style.display = "none";
+  }
+}
+
+function capturePhoto() {
+  if (!stream) return;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const dataUrl = canvas.toDataURL("image/png");
+  preview.src = dataUrl;
+  preview.style.display = "block";
+  stopCamera();
+  fetch(dataUrl)
+    .then(res => res.blob())
+    .then(blob => {
+      const file = new File([blob], "capture.png", { type: "image/png" });
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      fileInput.files = dataTransfer.files;
+    });
+}
+</script>
+</body>
+</html>

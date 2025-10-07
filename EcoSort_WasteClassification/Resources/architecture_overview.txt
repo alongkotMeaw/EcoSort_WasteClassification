@@ -1,0 +1,22 @@
+﻿EcoSort Waste Classification - High Level Architecture
+
+[Dataset]
+  -> StratifiedKFold (5 folds) -------------------------------
+       |                                                   |
+       v                                                   v
+  ResNet50 training from scratch (21-way)  EfficientNet-B1 training from scratch (21-way)
+  - Input 224x224                              - Input 260x260
+  - Adam lr=1e-4                               - Adam lr=1e-4
+  - Standard aug + norm                        - Standard aug + norm + class weights
+  - 5 checkpoints (fold1-5)                    - 5 checkpoints (fold1-5)
+
+Web App (Flask)
+  - Loads ResNet50 fold checkpoints
+  - Averages softmax probabilities per class
+  - Applies tuned thresholds (Resources/class_thresholds.json)
+  - Maps to waste bins (Recyclable, General, Biodegradable, Hazardous, Ewaste)
+  - Serves HTML UI with camera/upload support
+
+Outputs
+  - Confusion matrices and CSV logs per fold
+  - Ensemble predictions for user-uploaded images
