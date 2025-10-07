@@ -131,7 +131,7 @@ or other evaluations after cross-validation.
 - Dataset Preparation: Stratified fold splits of the internal `dataset_subclass_Label/dataset_split_strict` waste dataset
 
 ## License
-Specify the project license before publishing the repository publicly (e.g. MIT, Apache-2.0, GPL-3.0).
+Distributed under the MIT License. See `LICENSE` for details.
 
 ## 📜 Credits
 
